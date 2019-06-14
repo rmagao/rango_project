@@ -9,7 +9,6 @@ def about(request):
     context_dict = {'boldmessage' : 'Crunchy, creamy, cookie, candy, cupcake!'}
     return render(request, 'about/about.html', context=context_dict)
 
-
 def rango(request):
     return HttpResponse('<h1>Rango</h1>')
 
