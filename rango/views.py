@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from rango.models import Category
+from rango.models import Category, Page
 # Create your views here.
 def index(request):
     #context_dict = {'boldmessage' : 'Crunchy, creamy, cookie, candy, cupcake!'}
@@ -25,3 +25,16 @@ def rango(request):
 
 def login(request):
     return HttpResponse('Login Page')
+
+def show_category(request, category_name_slug):
+    context_dict = {'boldmessage' : 'Crunchy, creamy, cookie, candy, cupcake!'}
+
+    try:
+        category = Category.objects.get(slug=category_name_slug)
+        pages = Page.objects.filter(category=category)
+        context_dict['pages'] = pages
+        context_dict['category'] = category
+    except Category.DoesNotExist:
+        context_dict['category'] = None
+        context_dict['pages'] = None
+    return render(request, 'rango/category.html', context=context_dict)
