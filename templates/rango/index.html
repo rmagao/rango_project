@@ -1,21 +1,33 @@
 <!DOCTYPE html>
 {% load staticfiles %}
 
-<html lang="en" dir="ltr">
+<html>
   <head>
-    <meta charset="utf-8">
     <title>Rango</title>
     <!-- CSS -->
     <link rel="stylesheet" href="{% static "css/mystyle.css" %}" />
-    <!-- JavaScript -->
-    <script src="{% static "js/jquery.js" %}"></script>
   </head>
+
   <body>
     <h1>Rango says...</h1>
     <div>
       hey there partner! <br />
-      <strong>{{boldmessage}}</strong> <br />
+      <strong>{{boldmessage}}</strong>
     </div>
+
+    <div>
+      {% if categories %}
+      <ul>
+        {% for category in categories %}
+          <li>{{ category.name }}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+        <strong>There are no categories present.</strong>
+      {% endif %}
+
+    </div>
+
     <div>
       <a href="/rango/about">About</a><br />
       <img src="{% static 'images/rango.jpg' %}"
