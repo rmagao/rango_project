@@ -12,12 +12,15 @@
           {% for page in pages %}
           <li><a href="{{ page.url }}">{{ page.title }}</a></li>
           {% endfor %}
-          </ul>
+          <a href="/">Go back to index page</a>
+        </ul>
         {% else %}
         <strong>No pages currently in category.</strong>
+        <a href="/">Go back to index page</a>
         {% endif %}
       {% else %}
       The specified category does not exist!
+      <a href="/">Go back to index page</a>
       {% endif %}
     </div>
   </body>
