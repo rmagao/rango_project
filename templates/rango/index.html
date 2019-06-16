@@ -20,19 +20,27 @@
       {% if categories %}
       <ul>
         {% for category in categories %}
-          <li>
-            <a href="/category/{{ category.slug }}">{{ category.name }}</a>
-          </li>
+        <li>
+          <a href="/category/{{ category.slug }}">{{ category.name }}</a>
+        </li>
         {% endfor %}
       </ul>
       {% else %}
-        <strong>There are no categories present.</strong>
+      <strong>There are no categories present.</strong>
       {% endif %}
     </div>
 
     <h2>Most Viewed Pages</h2>
     <div>
-
+      {% if pages %}
+      <ul>
+        {% for page in pages %}
+        <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <strong>No pages are available</strong>
+      {% endif %}
     </div>
 
     <div>
