@@ -8,7 +8,7 @@
   <body>
     <h1>Add a Page to {{ category.name }}</h1>
     <div>
-      <form role='form' id="page_form" action="/rango/category/{{ category.slug }}/add_page/" method="post">
+      <form role='form' id="page_form" action="{% url 'add_page' category.slug %}" method="post">
         {% csrf_token %}
         {% for hidden in form.hidden_fields %}
           {{hidden}}
