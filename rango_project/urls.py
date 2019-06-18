@@ -17,11 +17,21 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from registration.backends.simple.views import RegistrationView
+from django.urls import reverse
 
 from rango import views
+
+class MyRegistrationView(RegistrationView):
+    def get_success_url(self, user):
+        return reverse('index')
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('', include('rango.urls')),
+    path('accounts/register/',
+          MyRegistrationView.as_view(), 
+          name='registration_register'),
+    path('accounts/', include('registration.backends.simple.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
