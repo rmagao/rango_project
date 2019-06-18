@@ -6,12 +6,17 @@
 {% endblock %}
 
 {% block body_block %}
+  <div class="container">
+  <div class="row">
+  <div class="col-md-6">
+  <div class="card mb-6">
+  <div class="card-body">
       {% if category %}
-      <h1>{{ category.name }}</h1>
+        <h1 class=”jumbotron-heading”>{{ category.name }}</h1>
         {% if pages %}
-        <ul>
+        <ul class='list-group'>
           {% for page in pages %}
-          <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+          <li class='list-group-item'><a href="{{ page.url }}">{{ page.title }}</a></li>
           {% endfor %}
           <a href="{% url 'rango:add_page' category.slug %}">Add Page</a> <br />
         </ul>
@@ -22,4 +27,9 @@
       {% else %}
       The specified category does not exist!
       {% endif %}
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
 {% endblock %}
