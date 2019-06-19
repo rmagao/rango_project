@@ -1,38 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rango.models import Category, Page
-from rango.forms import CategoryForm, PageForm
+from rango.forms import CategoryForm, PageForm, UserProfileForm
 from datetime import datetime
+from rango.bing_search import run_query, read_bing_key
+from django.shortcuts import redirect
 
 # Create your views here.
-
-# A helper method
-def get_server_side_cookie(request, cookie, default_val=None):
-    val = request.session.get(cookie)
-    if not val:
-        val = default_val
-    return val
-
-# Updated the function definition
-def visitor_cookie_handler(request):
-    visits = int(get_server_side_cookie(request, 'visits', '1'))
-    last_visit_cookie = get_server_side_cookie(request,
-                                               'last_visit',
-                                               str(datetime.now()))
-    last_visit_time = datetime.strptime(last_visit_cookie[:-7],
-                                        '%Y-%m-%d %H:%M:%S')
-
-    # If its been more that a day since the last visit...
-    if (datetime.now() - last_visit_time).seconds > 0:
-        visits = visits + 1
-        # Update the last visit cookie now that we have updated the count
-        request.session['last_visit'] = str(datetime.now())
-    else:
-        # Set the last visit cookie
-        request.session['last_visit'] = last_visit_cookie
-
-    #Update/set the visits COOKIE
-    request.session['visits'] = visits
 
 def index(request):
     request.session.set_test_cookie()
@@ -129,3 +103,80 @@ def add_page(request, category_name_slug):
 
     context_dict = {'form': form, 'category': category}
     return render(request, 'rango/add_page.html', context_dict)
+
+#@login_required
+def register_profile(request):
+    form = UserProfileForm()
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_profile = form.save(commit=False)
+            user_profile.user = request.user
+            user_profile.save()
+
+            return redirect('index')
+        else:
+            print(form.errors)
+
+    context_dict = {'form':form}
+
+    return render(request, 'rango/profile_registration.html', context_dict)
+
+def search(request):
+    result_list = []
+
+    query = None
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            # Run our Bing function to get the results list!
+            result_list = run_query(query)
+
+    return render(request, 'rango/search.html', {'result_list': result_list, 'query': query})
+
+def goto_url(request):
+    page_id = None
+    url = '/rango/'
+
+    if request.method == 'POST':
+        if 'page_id' in request.POST:
+            page_id = request.POST['page_id']
+
+            try:
+                page = Page.objects.get(id=page_id)
+                page.views = page.views + 1
+                page.save()
+                url = page.urls
+            except:
+                pass
+
+    return redirect(url)
+
+# A helper method
+def get_server_side_cookie(request, cookie, default_val=None):
+    val = request.session.get(cookie)
+    if not val:
+        val = default_val
+    return val
+
+# Updated the function definition
+def visitor_cookie_handler(request):
+    visits = int(get_server_side_cookie(request, 'visits', '1'))
+    last_visit_cookie = get_server_side_cookie(request,
+                                               'last_visit',
+                                               str(datetime.now()))
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7],
+                                        '%Y-%m-%d %H:%M:%S')
+
+    # If its been more that a day since the last visit...
+    if (datetime.now() - last_visit_time).seconds > 0:
+        visits = visits + 1
+        # Update the last visit cookie now that we have updated the count
+        request.session['last_visit'] = str(datetime.now())
+    else:
+        # Set the last visit cookie
+        request.session['last_visit'] = last_visit_cookie
+
+    #Update/set the visits COOKIE
+    request.session['visits'] = visits
