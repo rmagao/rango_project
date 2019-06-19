@@ -48,7 +48,7 @@ def show_category(request, category_name_slug):
 
     try:
         category = Category.objects.get(slug=category_name_slug)
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
         context_dict['pages'] = pages
         context_dict['category'] = category
     except Category.DoesNotExist:
@@ -123,6 +123,27 @@ def register_profile(request):
 
     return render(request, 'rango/profile_registration.html', context_dict)
 
+def profile(request, username):
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return redirect('index')
+
+    userprofile = UserProfile.objects.get_or_create(user=user)[0]
+    form = UserProfileForm(
+        {'website': userprofile.website, 'picture': userprofile.picture})
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('profile', user.username)
+        else:
+            print(form.errors)
+
+    return render(request, 'rango/profile.html',
+        {'userprofile': userprofile, 'selecteduser': user, 'form': form})
+
 def search(request):
     result_list = []
 
@@ -138,16 +159,15 @@ def search(request):
 def goto_url(request):
     page_id = None
     url = '/rango/'
-
-    if request.method == 'POST':
-        if 'page_id' in request.POST:
-            page_id = request.POST['page_id']
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
 
             try:
                 page = Page.objects.get(id=page_id)
                 page.views = page.views + 1
                 page.save()
-                url = page.urls
+                url = page.url
             except:
                 pass
 

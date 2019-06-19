@@ -11,4 +11,5 @@ urlpatterns = [
     path('rango/search/', views.search, name='search'),
     path('rango/goto/', views.goto_url, name='goto'),
     path('rango/register_profile/', views.register_profile, name='register_profile'),
+    path('rango/profile/', views.profile, name='profile')
 ]
