@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from rango.models import Category, Page
+from rango.models import Category, Page, UserProfile
 from rango.forms import CategoryForm, PageForm, UserProfileForm
 from datetime import datetime
 from rango.bing_search import run_query, read_bing_key
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -36,6 +40,12 @@ def index(request):
     # Return response back to the user, updating any cookies that need changed.
     return response
 
+class AboutView(View):
+    def get(self, request):
+        # view logic
+        visitor_cookie_handler(request)
+        return render(request, 'rango/about.html', context={'visits': request.session['visits']})
+
 def about(request):
 
     visitor_cookie_handler(request)
@@ -54,8 +64,43 @@ def show_category(request, category_name_slug):
     except Category.DoesNotExist:
         context_dict['category'] = None
         context_dict['pages'] = None
+
+    # create a default query based on the category name
+    # to be shown in the search box
+    context_dict['query'] = category.name
+
+    result_list = []
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            # Run our search API function to get the results list!
+            result_list = run_query(query)
+            context_dict['query'] = query
+            context_dict['result_list'] = result_list
+
+    # Go render the response and return it to the client
     return render(request, 'rango/category.html', context=context_dict)
 
+class AddCategoryView(View):
+
+    @method_decorator(login_required)
+    def get(self, request):
+        form = CategoryForm()
+        return render(request, 'rango/add_category.html', {'form': form})
+
+    @method_decorator(login_required)
+    def post(self, request):
+        form = CategoryForm()
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save(commit=True)
+            return index(request)
+        else:
+            print(form.errors)
+        return render(request, 'rango/add_category.html', {'form': form})
+
+@login_required
 def add_category(request):
     form = CategoryForm()
 
@@ -81,6 +126,7 @@ def add_category(request):
     # Render the form with error messages (if any).
     return render(request, 'rango/add_category.html', {'form': form})
 
+@login_required
 def add_page(request, category_name_slug):
     try:
         category = Category.objects.get(slug=category_name_slug)
@@ -104,7 +150,7 @@ def add_page(request, category_name_slug):
     context_dict = {'form': form, 'category': category}
     return render(request, 'rango/add_page.html', context_dict)
 
-#@login_required
+@login_required
 def register_profile(request):
     form = UserProfileForm()
 
@@ -123,6 +169,7 @@ def register_profile(request):
 
     return render(request, 'rango/profile_registration.html', context_dict)
 
+@login_required
 def profile(request, username):
     try:
         user = User.objects.get(username=username)
@@ -143,6 +190,39 @@ def profile(request, username):
 
     return render(request, 'rango/profile.html',
         {'userprofile': userprofile, 'selecteduser': user, 'form': form})
+
+class ProfileView(View):
+	def get_user_details(self, username):
+		try:
+			user = User.objects.get(username=username)
+		except User.DoesNotExist:
+			return redirect('index')
+
+		userprofile = UserProfile.objects.get_or_create(user=user)[0]
+		form = UserProfileForm({'website': userprofile.website, 'picture': userprofile.picture})
+		return (user, userprofile, form)
+
+		@method_decorator(login_required)
+		def get(self, request, username):
+			(user, userprofile, form) = self.get_user_details(username)
+			return render(request, 'rango/profile.html', {'userprofile': userprofile, 'selecteduser': user, 'form': form})
+
+		@method_decorator(login_required)
+		def post(self, request, username):
+			(user, userprofile, form) = self.get_user_details(username)
+			form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
+			if form.is_valid():
+				form.save(commit=True)
+				return redirect('profile', user.username)
+			else:
+				print(form.errors)
+			return render(request, 'rango/profile.html', {'userprofile': userprofile, 'selecteduser': user, 'form': form})
+
+@login_required
+def list_profiles(request):
+    userprofile_list = UserProfile.objects.all()
+
+    return render(request, 'rango/list_profiles.html', {'userprofile_list': userprofile_list})
 
 def search(request):
     result_list = []
