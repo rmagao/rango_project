@@ -127,6 +127,20 @@ def add_category(request):
     return render(request, 'rango/add_category.html', {'form': form})
 
 @login_required
+def like_category(request):
+    cat_id = None
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+        likes = 0
+    if cat_id:
+        cat = Category.objects.get(id=int(cat_id))
+        if cat:
+            likes = cat.likes + 1
+            cat.likes = likes
+            cat.save()
+    return HttpResponse(likes)
+
+@login_required
 def add_page(request, category_name_slug):
     try:
         category = Category.objects.get(slug=category_name_slug)
@@ -193,7 +207,7 @@ class ProfileView(View):
         form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
         if form.is_valid():
             form.save(commit=True)
-            return redirect('profile', user.username)
+            return redirect('rango:profile', user.username)
         else:
             print(form.errors)
         return render(request, 'rango/profile.html',
