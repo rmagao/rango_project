@@ -6,15 +6,43 @@
 {% endblock %}
 
 {% block body_block %}
-  <div class=”jumbotron p-4”>
-    <div class=”container”>
-      <h1 class=”jumbotron-heading”>Rango says here is the about page</h1>
-  </div>
+  <div class="jumbotron p-3">
+    <div class="container">
+      <h1 class="jumbotron-heading">About Rango</h1>
+    </div>
   </div>
 
-    <div>
-      <h2>This tutorial has been put together by Ryan</h2>
-      The number of times you visited this site: {{ visits }} <br/>
-      <img src="{{ MEDIA_URL }}cat.jpg" />
+  <div class="container">
+    <div class="row">
+      Rango says here is the about page.
+      <br />
+      This tutorial has been put together by Ryan
+      <br />
+      The number of times you visited this site: {{ visits }}
+      <br />
     </div>
+    <p>This text is for a JQuery Example</p>
+  </div>
+
+
+
+  <div class="container">
+    <div class="row p-3">
+      <button class="btn btn-primary" onClick="alert('You clicked the button using inline JavaScript.');">
+        Click Me - I run JavaScript
+      </button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row p-3">
+      <button class="btn btn-primary" id="about-btn">
+        Click Me - I'm JavaScript on Ice
+      </button>
+    </div>
+  </div>
+
+  <div>
+    <img src="{{ MEDIA_URL }}cat.jpg" />
+  </div>
 {% endblock %}
