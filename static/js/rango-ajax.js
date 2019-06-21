@@ -1,7 +1,6 @@
-
 $(document).ready( function() {
 
-    $('#likes').click(function(){
+    $('#likes').click(function(event){
         var catid;
         catid = $(this).attr("data-catid");
         $.get('/rango/like/', { category_id: catid }, function(data){

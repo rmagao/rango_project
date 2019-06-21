@@ -18,4 +18,7 @@ $(document).ready( function() {
 	    msgstr = msgstr + "ooo"
 	    $("#msg").html(msgstr)
 	});
+
+
+
 });
