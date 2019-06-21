@@ -18,15 +18,15 @@ def populate():
          'views' : 100,},
         {'title' : 'How to Think like a Computer Scientist',
          'url' : 'http://www.greenteapress.com/thinkpython/',
-         'views' : 75,},
+         'views' : 200,},
         {'title' : 'Learn Python in 10 Minutes',
          'url' : 'http://www.korokithakis.net/tutorials/python/',
-         'views' : 50,},]
+         'views' : 250,},]
 
     django_pages = [
         {"title":"Official Django Tutorial",
          "url":"https://docs.djangoproject.com/en/1.9/intro/tutorial01/",
-         'views' : 125,},
+         'views' : 225,},
         {"title":"Django Rocks",
          "url":"http://www.djangorocks.com/",
          'views' : 150,},
@@ -40,7 +40,7 @@ def populate():
          'views' : 80,},
         {"title":"Flask",
          "url":"http://flask.pocoo.org",
-         'views' : 120,},]
+         'views' : 180,},]
 
     languages = [
         {"title":"Pascal",
