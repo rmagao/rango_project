@@ -25,7 +25,12 @@
               <a href="{% url 'rango:profile' listuser.user.username %}">
               {{ listuser.user.username }}</a>
             </h4>
+            <img src="{{ MEDIA_URL }}{{ listuser.picture }}"
+                  width="200"
+                  height="200"
+                  alt="{{ selecteduser.username}}" />
           </div>
+          <br />
           {% endfor %}
         </div>
       </div>
