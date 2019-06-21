@@ -14,7 +14,7 @@ urlpatterns = [
     path('rango/register_profile/', views.register_profile, name='register_profile'),
     path('rango/profile/<username>/', ProfileView.as_view(), name='profile'),
     path('rango/profiles/', views.list_profiles, name='list_profiles'),
-    path('like/', views.like_category, name='like_category'),
+    path('rango/like/', views.like_category, name='like_category'),
     path('rango/suggest/', views.suggest_category, name='suggest_category'),
     path('rango/add/', views.auto_add_page, name='auto_add_page'),
 ]
