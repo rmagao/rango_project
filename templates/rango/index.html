@@ -1,72 +1,80 @@
 {% extends 'rango/base.html' %}
-{% load staticfiles %}
+{%load staticfiles %}
 
-<link rel="stylesheet" href="{% static "css/mystyle.css" %}" />
-
-{% block title_block %}
-  Homepage
-{% endblock %}
 
 {% block body_block %}
-    <div class=”jumbotron p-4”> <div class=”container”> <h1 class=”jumbotron-heading”>Rango says…</h1>
-    <div> <h2 class=”h2”> Howdy {{ user.username }}! Hey there partner! </h2>
-
-      <strong>{{boldmessage}}</strong>
+    <div class="jumbotron p-4">
+      <div class="container">
+        <img src="{% static 'images/Rango_logo.png' %}"
+        width="234"
+        height="111"
+        alt="Rango">
+      </div>
     </div>
-
-    <p></p>
 
     <div class="container">
     <div class="row">
-    <div class="col-md-6">
+
+    <div class="col-md-4">
     <div class="card mb-6">
     <div class="card-body">
-      <h2>Most Liked Categoies</h2>
-      <p class='card-text'></p>
+      <h3>Most Liked Categories</h3>
+      <p class="card-text">
         {% if categories %}
-        <ul class='list-group'>
-          {% for category in categories %}
-          <li class='list-group-item'>
-            <!-- parameteries URL with category.slug as parameter -->
-            <a href="{% url 'rango:show_category' category.slug %}">{{ category.name }}</a>
-          </li>
-          {% endfor %}
+        <ul class="list-group">
+            {% for category in categories %}
+                <li class="list-group-item">
+                  <a href="{% url 'rango:show_category' category.slug %}">{{category.name}}</a>
+                  ({{ category.likes }} likes)
+                </li>
+            {% endfor %}
         </ul>
         {% else %}
-        <strong>There are no categories present.</strong>
-        {% endif %}
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-
-    <p></p>
-
-    <div class="col-md-6">
-    <div class="card mb-6">
-    <div class="card-body">
-      <h2>Most Viewed Pages</h2>
-      <p class='card-text'>
-        {% if pages %}
-        <ul class='list-group'>
-          {% for page in pages %}
-          <li class='list-group-item'>
-            <a href="{{ page.url }}">{{ page.title }}</a>
-          </li>
-          {% endfor %}
-        </ul>
-        {% else %}
-        <strong>No pages are available</strong>
+          <strong>There are no categories present.</strong>
         {% endif %}
       </p>
     </div>
     </div>
     </div>
 
-    <p></p>
-
-    <div>
-      <img src="{% static 'images/rango.jpg' %}" alt="Picture of Rango" />
+    <div class="col-md-4">
+    <div class="card mb-6">
+    <div class="card-body">
+      <h3>Most Viewed Pages</h3>
+      <p class="card-text">
+        {% if pages %}
+          <ul class="list-group">
+            {% for page in pages %}
+                <li class="list-group-item">
+                  <a href="{{ page.url }}">{{ page.title }}</a>
+                  ({{ page.views }} views)
+                </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <strong>There are no pages present.</strong>
+        {% endif %}
+      </p>
     </div>
+    </div>
+    </div>
+
+    <div class="col-md-4">
+    <div class="card mb-6">
+    <div class="card-body">
+      <h3>Rango Trailer</h3>
+      <p class="card-text">
+        <video width="320" height="240" controls>
+          <source src="{% static 'videos/RangoTrailer.mp4' type='video/mp4' %}">
+        </video>
+      </p>
+    </div>
+    </div>
+    </div>
+
+
+    </div>
+    </div>
+
+
 {% endblock %}
