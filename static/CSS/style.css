@@ -1,0 +1,16 @@
+html,
+body,
+header,
+#intro {
+  height: 100%
+  fixed
+}
+
+#intro {
+  background: url("http://www.technocrazed.com/wp-content/uploads/2015/12/Brick-wallaper-For-Background-33.jpg")repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  fixed:
+}
