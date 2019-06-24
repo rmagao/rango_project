@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.5">
-    <link rel="icon" href="{% static 'images/rango_' %}">
+    <link rel="icon" href="{% static 'images/rango_icon.png' %}">
     <title>
         Rango - {% block title_block %}How to Tango with Django!{% endblock %}
     </title>
@@ -35,19 +35,24 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item"><a class="nav-link" href="{% url 'rango:index' %}">Home</a></li>
-                        <li class="nav-item "><a class="nav-link" href="{% url 'rango:about' %}">About</a></li>
-                      {% if user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'rango:add_category' %}">Add Category</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/rango/">Logout</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'rango:profile' user.username %}">Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'rango:list_profiles' %}">List Profiles</a></li>
-                      {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Register Here</a></li>
-                        <li class="nav-item "><a class="nav-link" href="{% url 'auth_login' %}">Login</a></li>
-                      {% endif %}
-                    </ul>
+                  <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'rango:index' %}">Home</a></li>
+                    <li class="nav-item "><a class="nav-link" href="{% url 'rango:about' %}">About</a></li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'rango:add_category' %}">Add Category</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'rango:list_profiles' %}">List Profiles</a></li>
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'rango:profile' user.username %}">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'auth_logout' %}?next=/rango/">Logout</a></li>
+                  </ul>
+                    {% else %}
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'registration_register' %}">Register Here</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'auth_login' %}">Login</a></li>
+                  </ul>
+                    {% endif %}
                 </div>
             </nav>
         </header>
