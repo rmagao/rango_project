@@ -56,30 +56,28 @@ def show_category(request, category_name_slug):
     context_dict = {}
 
     try:
-        category = Category.objects.get(slug=category_name_slug)
-        pages = Page.objects.filter(category=category).order_by('-views')
+        category = Category.objects.get(slug = category_name_slug)
+        pages = Page.objects.filter(category = category).order_by('-views')
         context_dict['pages'] = pages
         context_dict['category'] = category
+
     except Category.DoesNotExist:
         context_dict['category'] = None
         context_dict['pages'] = None
 
-    # create a default query based on the category name
-    # to be shown in the search box
+    # Code here to handle POST request
     context_dict['query'] = category.name
 
     result_list = []
     if request.method == 'POST':
         query = request.POST['query'].strip()
-
         if query:
-            # Run our search API function to get the results list!
+            # Run Bing search, append result to context_dict
             result_list = run_query(query)
             context_dict['query'] = query
             context_dict['result_list'] = result_list
 
-    # Go render the response and return it to the client
-    return render(request, 'rango/category.html', context=context_dict)
+    return render(request, 'rango/category.html', context_dict)
 
 class AddCategoryView(View):
 
@@ -259,18 +257,6 @@ def list_profiles(request):
     userprofile_list = UserProfile.objects.all()
 
     return render(request, 'rango/list_profiles.html', {'userprofile_list': userprofile_list})
-
-def search(request):
-    result_list = []
-
-    query = None
-    if request.method == 'POST':
-        query = request.POST['query'].strip()
-        if query:
-            # Run our Bing function to get the results list!
-            result_list = run_query(query)
-
-    return render(request, 'rango/search.html', {'result_list': result_list, 'query': query})
 
 def goto_url(request):
     page_id = None
