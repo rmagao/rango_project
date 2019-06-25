@@ -70,7 +70,7 @@ def show_category(request, category_name_slug):
 
     result_list = []
     if request.method == 'POST':
-        query = request.POST['query'].strip()
+        query = request.POST
         if query:
             # Run Bing search, append result to context_dict
             result_list = run_query(query)
@@ -131,7 +131,7 @@ def add_category(request):
         # Have we been provided with a valid form?
         if form.is_valid():
             # Save the new category to the database
-            cat = form.save(commit=True)
+            form.save(commit=True)
             # New that the category is saved
             # We could give a confirmation boldmessage
             # But since the most recent category added is on the index Page
@@ -173,11 +173,12 @@ def add_page(request, category_name_slug):
         form = PageForm(request.POST)
 
         if form.is_valid():
-            page = form.save(commit=False)
-            page.category = category
-            page.views = 0
-            page.save()
-            return show_category(request, category_name_slug)
+            if category:
+                page = form.save(commit = False)
+                page.category = category
+                page.views = 0
+                page.save()
+                return show_category(request, category_name_slug)
         else:
             print(form.errors)
 
